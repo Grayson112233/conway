@@ -1,5 +1,5 @@
-main: main.o render.o sdl_boilerplate.o clock.o
-	gcc main.o render.o sdl_boilerplate.o clock.o -o main.out -lSDL2 -lSDL2_ttf -std=c99 -g
+main: main.o render.o sdl_boilerplate.o clock.o rules.o patterns.o
+	gcc main.o render.o sdl_boilerplate.o clock.o rules.o patterns.o -o main.out -lSDL2 -lSDL2_ttf -std=c99 -g
 
 main.o: main.c
 	gcc main.c -c -std=c99
@@ -12,3 +12,9 @@ render.o: graphics/render.c
 
 clock.o: graphics/clock.c
 	gcc graphics/clock.c -c -std=c99
+
+rules.o: game/rules.c
+	gcc game/rules.c -c -std=c99
+
+patterns.o: game/patterns.c
+	gcc game/patterns.c -c -std=c99

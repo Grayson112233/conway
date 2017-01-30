@@ -7,7 +7,7 @@
 
 // Intensity of cells are reduced by 1 every DELAY seconds
 // (Lower value = less burn-in)
-#define DELAY 0.01f
+#define DELAY 0.0001f
 
 float time_since_decay = 0.0f;
 
@@ -27,11 +27,14 @@ void clear_screen() {
     SDL_RenderClear(renderer);
 }
 
-void set_grid(bool game_grid[GRID_HEIGHT][GRID_WIDTH]) {
+void update_render_grid(bool game_grid[GRID_HEIGHT][GRID_WIDTH]) {
     for(int i = 0; i < GRID_HEIGHT; i++) {
         for(int j = 0; j < GRID_WIDTH; j++) {
-            if(game_grid[i][j]) {
+            if(light_grid[i][j] == -1) {
                 light_grid[i][j] = 255;
+            }
+            if(game_grid[i][j]) {
+                light_grid[i][j] = -1;
             }
         }
     }
@@ -70,8 +73,8 @@ void draw_grid(float delta) {
         for(int j = 0; j < GRID_WIDTH; j++) {
             intensity = 255 - light_grid[i][j];
             rect.x = j * width;
-            if(intensity == 0) {
-                //printf("Drawing black at %d, %d\n", rect.x, rect.y);
+            if(intensity > 255) {
+                intensity = 0;
             }
             SDL_SetRenderDrawColor(renderer, intensity, intensity, intensity, 0xFF);
             SDL_RenderFillRect(renderer, &rect);

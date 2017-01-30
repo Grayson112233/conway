@@ -4,8 +4,15 @@
 #include "graphics/sdl_boilerplate.h"
 #include "graphics/render.h"
 #include "graphics/clock.h"
+#include "game/rules.h"
+#include "game/patterns.h"
+
+// Game grid is stepped forward one cycle every STEP_DELAY seconds
+#define STEP_DELAY (0.01f)
 
 float delta;
+
+float time_since_step = 0.0f;
 
 bool game_grid[GRID_HEIGHT][GRID_WIDTH];
 
@@ -39,6 +46,10 @@ int main() {
     graphics_init();
     init_clock();
     init_render();
+    init_grid(game_grid);
+    update_render_grid(game_grid);
+
+    random_grid(game_grid);
 
     bool loop = true;
 
@@ -46,6 +57,15 @@ int main() {
 
         loop = frame_update();
         clear_screen();
+
+        // Step the grid forward one cycle every STEP_DELAY seconds
+        time_since_step += delta;
+        while(time_since_step > STEP_DELAY) {
+            time_since_step -= STEP_DELAY;
+            step_conway(game_grid);
+            update_render_grid(game_grid);
+        }
+
         draw_grid(delta);
         SDL_RenderPresent(renderer);
 
